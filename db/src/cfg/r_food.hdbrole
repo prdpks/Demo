@@ -6,7 +6,8 @@
         "name": "cv_products_ap",
         "type": "VIEW",
         "privileges": [
-          "SELECT"
+          "SELECT",
+          "UNMASKED"
         ]
       }
     ],
