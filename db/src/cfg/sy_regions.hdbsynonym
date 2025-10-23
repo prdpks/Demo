@@ -1,0 +1,8 @@
+{
+  "sy_regions": {
+    "target": {
+      "object": "REGIONS",
+      "schema": "PLAIN"
+    }
+  }
+}

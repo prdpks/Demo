@@ -1,0 +1,3 @@
+VIEW "RegionsTextView" (REGION, DESCRIPTION )
+	as select REGION, DESCRIPTION
+	from "sy_regions" 

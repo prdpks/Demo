@@ -1,0 +1,22 @@
+{
+  "role": {
+    "name": "r_food",
+    "object_privileges": [
+      {
+        "name": "cv_products_ap",
+        "type": "VIEW",
+        "privileges": [
+          "SELECT"
+        ]
+      }
+    ],
+    "schema_analytic_privileges": [
+      {
+        "schema_reference": "DEMO_HDI_DB_2",
+        "privileges": [
+          "ap_food"
+        ]
+      }
+    ]
+  }
+}

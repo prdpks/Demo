@@ -1,0 +1,22 @@
+{
+	"CC_ACCESS": {
+		"application_user": {
+			"global_roles": [
+				{
+					"roles": [
+						"CCROLE"
+					]
+				}
+			]
+		},
+		"object_owner": {
+			"global_roles": [
+				{
+					"roles": [
+						"CCROLE"
+					]
+				}
+			]
+		}
+	}
+}

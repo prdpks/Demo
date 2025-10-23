@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:AccessControl="http://www.sap.com/ndb/SQLCoreModelAccessControl.ecore" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" xmlns:Privilege="http://www.sap.com/ndb/BiModelPrivilege.ecore" id="cv_sales" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" cacheInvalidationPeriod="NONE" enforceSqlExecution="true" application="BAS" mdsCubeConversionExecution="AT_LOADING_TIME">
+<descriptions defaultDescription="cv_sales"/>
+<localVariables>
+  <variable id="IP_DELIVERY" parameter="true">
+    <descriptions defaultDescription="IP_DELIVERY"/>
+    <variableProperties datatype="BOOLEAN" mandatory="true" defaultValue="1">
+      <valueDomain type="empty"/>
+      <selection multiLine="false" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+  <variable id="VAR_PRODUCT">
+    <descriptions defaultDescription="VAR_PRODUCT"/>
+    <variableProperties datatype="INTEGER" length="10" scale="0" mandatory="true" defaultValue="">
+      <valueDomain type="AttributeValue">
+        <attribute name="PRODUCT_ID" resourceUri="cv_products"/>
+      </valueDomain>
+      <selection multiLine="true" type="SingleValue"/>
+    </variableProperties>
+  </variable>
+</localVariables>
+<variableMappings/>
+<dataSources>
+  <DataSource id="SALES">
+    <resourceUri>SALES</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:AggregationView" id="Aggregation_1">
+    <viewAttributes>
+      <viewAttribute id="PRODUCT_ID"/>
+      <viewAttribute id="QUANTITY" aggregationType="sum"/>
+      <viewAttribute id="PRICE" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="CC_DCHARGE" datatype="DOUBLE" expressionLanguage="SQL">
+        <formula>'$$IP_DELIVERY$$'*50</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="CC_AMOUNT" datatype="DOUBLE" expressionLanguage="SQL">
+    
+        <formula>(&quot;PRICE&quot;*&quot;QUANTITY&quot;)+&quot;CC_DCHARGE&quot;</formula>
+    
+      </calculatedViewAttribute>
+    </calculatedViewAttributes>
+    <restrictedViewAttributes>
+      <restrictedViewAttribute id="RC_QUANTITY" baseViewAttribute="QUANTITY" restrictionExpressionLanguage="SQL">
+        <descriptions defaultDescription=""/>
+        <restriction logicalOperator="AND">
+          <filter xsi:type="Privilege:AttributeFilter" attributeName="PRICE" datatype="DOUBLE">
+            <valueFilter xsi:type="AccessControl:SingleValueFilter" operator="LT" including="true" value="10"/>
+          </filter>
+          <attributeName>PRICE</attributeName>
+        </restriction>
+      </restrictedViewAttribute>
+    </restrictedViewAttributes>
+    <input node="SALES"/>
+  </calculationView>
+</calculationViews>
+
+<logicalModel id="Aggregation_1">
+  <attributes>
+    <attribute id="PRODUCT_ID_1" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="PRODUCT_ID_1"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="PRODUCT_ID"/>
+    </attribute>
+    <attribute id="PRODUCT_ID$local">
+      <descriptions defaultDescription="Product ID"/>
+      <keyMapping columnObjectName="Aggregation_1" columnName="PRODUCT_ID"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="QUANTITY" order="2" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="QUANTITY"/>
+      <measureMapping columnObjectName="Aggregation_1" columnName="QUANTITY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="PRICE" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="PRICE"/>
+      <measureMapping columnObjectName="Aggregation_1" columnName="PRICE"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="CC_DCHARGE" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_DCHARGE"/>
+      <measureMapping columnObjectName="Aggregation_1" columnName="CC_DCHARGE"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="CC_AMOUNT" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="CC_AMOUNT"/>
+      <measureMapping columnObjectName="Aggregation_1" columnName="CC_AMOUNT"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+    <measure id="RC_QUANTITY" order="6" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="RC_QUANTITY"/>
+      <measureMapping columnObjectName="Aggregation_1" columnName="RC_QUANTITY"/>
+      <exceptionAggregationMetadata/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+  <sharedDimensions>
+    <logicalJoin associatedObjectUri="cv_products" useDimensionViewHierarchies="true">
+      <attributes>
+        <attributeRef>PRODUCT_ID$local</attributeRef>
+      </attributes>
+      <associatedAttributeNames>
+        <attributeName>PRODUCT_ID</attributeName>
+      </associatedAttributeNames>
+      <properties cardinality="C1_N" joinType="leftOuter" joinOperator="Equal"/>
+      <associatedAttributeFeatures>
+        <attributeReference attributeName="PRODUCT_ID">
+          <localVariable>VAR_PRODUCT</localVariable>
+        </attributeReference>
+      </associatedAttributeFeatures>
+    </logicalJoin>
+  </sharedDimensions>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    
+  
+    <shape expanded="true" modelObjectName="Aggregation_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="90" y="259"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape modelObjectName="Aggregation_1" modelObjectNameSpace="StarJoinViewNodeInput" modelObjectType="repository">
+      <upperLeftCorner x="320" y="30"/>
+      <rectangleSize width="148"/>
+    </shape>
+    <shape modelObjectName="cv_products" modelObjectNameSpace="StarJoinViewNodeSharedCV" modelObjectType="repository">
+      <upperLeftCorner x="20" y="30"/>
+      <rectangleSize width="186"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
